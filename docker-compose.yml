@@ -42,11 +42,11 @@ services:
   node-exporter:
     image: prom/node-exporter:v1.8.2
     container_name: lab-node-exporter
-    command:
-      - "--path.rootfs=/host"
-    pid: host
-    volumes:
-      - /:/host:ro,rslave
+    #command:
+    #  - "--path.rootfs=/host"
+    #pid: host
+    #volumes:
+    #  - /:/host:ro,rslave
     ports:
       - "9100:9100"
     restart: unless-stopped
@@ -96,7 +96,7 @@ services:
 
   # ----------------------------- Visualización -----------------------------
   grafana:
-    image: grafana/grafana:12.4.0
+    image: grafana/grafana:11.6.0
     container_name: lab-grafana
     environment:
       - GF_SECURITY_ADMIN_USER=admin
@@ -116,7 +116,3 @@ volumes:
   prometheus-data:
   grafana-data:
 
-networks:
-  default:
-    name: observabilidad-lab_default
-    external: true
