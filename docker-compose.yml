@@ -115,3 +115,8 @@ services:
 volumes:
   prometheus-data:
   grafana-data:
+
+networks:
+  default:
+    name: observabilidad-lab_default
+    external: true
