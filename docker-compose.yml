@@ -73,7 +73,7 @@ services:
     container_name: lab-loki
     command: -config.file=/etc/loki/loki-config.yaml
     volumes:
-      - ./loki/loki-config.ymml:/etc/loki/loki-config.yaml:ro
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yaml:ro
     ports:
       - "3100:3100"
     restart: unless-stopped
