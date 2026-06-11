@@ -18,6 +18,47 @@ Evaluation interval (intervalo de evaluación) define cada cuánto tiempo la ala
 
 ---
 
+## Validación
+
+**1. Levantar el stack**
+```bash
+docker compose up -d --build
+docker compose ps
+```
+Todos los servicios deben aparecer en estado `Up`.
+
+**2. Verificar servicios**
+
+| Servicio | URL |
+|---|---|
+| Frontend | http://localhost:8080 |
+| Backend métricas | http://localhost:3001/metrics |
+| Grafana | http://localhost:3000 |
+| Prometheus | http://localhost:9090 |
+| Alloy | http://localhost:12345 |
+
+**3. Verificar targets en Prometheus**  
+Ir a http://localhost:9090/targets y confirmar que todos los targets están en estado `UP`.
+
+**4. Verificar dashboards en Grafana**  
+Entrar con `admin` / `admin`, ir a Dashboards y abrir el dashboard creado. Los 4 paneles deben mostrar datos.
+
+> **Nota:** Las consultas PromQL usan `id="/docker"` en lugar de `name="lab-backend"` porque en Windows, cAdvisor identifica los contenedores por ID y no por nombre. En Linux funcionaría con `name="lab-backend"`.
+
+**5. Probar la alarma**  
+Abrir http://localhost:8080 y pulsar **"Generar carga de CPU (30s)"**. En **Alerting → Alert rules** la regla debe pasar de `Normal` → `Pending` → `Firing`.
+
+**6. Verificar el ciclo alarma → log**  
+En el panel **"Logs de aplicación"** filtrar con:
+
+```logql
+{tier="application"} | json | msg="grafana_alert_received"
+```
+
+Debe aparecer un log con `alert_status: firing`.
+
+---
+
 ## Explicación de componentes del stack
 
 **Prometheus:** Guarda métricas sobre el estado de servidores, bd y microservicios. Las consulta cada 5 segundos desde los servicios.
